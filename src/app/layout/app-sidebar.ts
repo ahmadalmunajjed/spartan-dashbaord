@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideCommand } from '@ng-icons/lucide';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
+import { DirectionService } from '../core/direction.service';
 import { NavMain } from './nav-main';
 import { NavProjects } from './nav-projects';
 import { NavSecondary } from './nav-secondary';
@@ -15,7 +16,7 @@ import { sidebarData } from './sidebar-data';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div hlmSidebarWrapper>
-      <hlm-sidebar variant="inset">
+      <hlm-sidebar variant="inset" [side]="direction.dir() === 'rtl' ? 'right' : 'left'">
         <hlm-sidebar-header>
           <ul hlmSidebarMenu>
             <li hlmSidebarMenuItem>
@@ -25,7 +26,7 @@ import { sidebarData } from './sidebar-data';
                 >
                   <ng-icon name="lucideCommand" class="text-base" />
                 </div>
-                <div class="grid flex-1 text-left text-sm leading-tight">
+                <div class="grid flex-1 text-start text-sm leading-tight">
                   <span class="truncate font-medium">Makook</span>
                   <span class="truncate text-xs">Enterprise</span>
                 </div>
@@ -49,4 +50,5 @@ import { sidebarData } from './sidebar-data';
 })
 export class AppSidebar {
   protected readonly data = sidebarData;
+  protected readonly direction = inject(DirectionService);
 }

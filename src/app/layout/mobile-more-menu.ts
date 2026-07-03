@@ -44,7 +44,7 @@ import { sidebarData } from './sidebar-data';
       <hlm-avatar class="rounded-lg">
         <span hlmAvatarFallback>{{ _initials() }}</span>
       </hlm-avatar>
-      <div class="grid flex-1 text-left text-sm leading-tight">
+      <div class="grid flex-1 text-start text-sm leading-tight">
         <span class="truncate font-medium">{{ data.user.name }}</span>
         <span class="text-muted-foreground truncate text-xs">{{ data.user.email }}</span>
       </div>

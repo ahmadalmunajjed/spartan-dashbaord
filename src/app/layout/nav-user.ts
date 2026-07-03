@@ -35,11 +35,11 @@ import type { SidebarUser } from './sidebar-data';
           <hlm-avatar class="rounded-lg">
             <span hlmAvatarFallback>{{ _initials() }}</span>
           </hlm-avatar>
-          <div class="grid flex-1 text-left text-sm leading-tight">
+          <div class="grid flex-1 text-start text-sm leading-tight">
             <span class="truncate font-medium">{{ u.name }}</span>
             <span class="truncate text-xs">{{ u.email }}</span>
           </div>
-          <ng-icon name="lucideChevronsUpDown" class="ml-auto text-base" />
+          <ng-icon name="lucideChevronsUpDown" class="ms-auto text-base" />
         </button>
       </li>
     </ul>
@@ -47,11 +47,11 @@ import type { SidebarUser } from './sidebar-data';
     <ng-template #menu>
       <hlm-dropdown-menu class="min-w-56 rounded-lg">
         <hlm-dropdown-menu-label>
-          <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+          <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
             <hlm-avatar class="rounded-lg">
               <span hlmAvatarFallback>{{ _initials() }}</span>
             </hlm-avatar>
-            <div class="grid flex-1 text-left text-sm leading-tight">
+            <div class="grid flex-1 text-start text-sm leading-tight">
               <span class="truncate font-medium">{{ u.name }}</span>
               <span class="truncate text-xs">{{ u.email }}</span>
             </div>
