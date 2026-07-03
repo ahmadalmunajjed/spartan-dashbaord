@@ -46,7 +46,7 @@ const BAR_MAX_WIDTH = 24;
             [attr.y]="height - 6"
             text-anchor="middle"
             class="fill-muted-foreground"
-            font-size="10"
+            font-size="14"
           >
             {{ bar.label }}
           </text>

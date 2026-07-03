@@ -11,7 +11,7 @@ const CURRENCY = new Intl.NumberFormat('en-US', { style: 'currency', currency: '
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (order(); as order) {
-      <div class="flex flex-col gap-4 px-4 pb-4">
+      <div class="flex max-h-[80vh] flex-col gap-4 overflow-y-auto px-4 pb-4 md:max-h-none">
         <div class="flex items-center gap-2">
           <app-status-badge [status]="order.payment" />
           <app-status-badge [status]="order.fulfillment" />
