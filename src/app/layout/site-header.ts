@@ -8,7 +8,7 @@ import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
   imports: [HlmSidebarImports, HlmSeparatorImports, HlmBreadcrumbImports],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <header class="flex h-16 shrink-0 items-center gap-2">
+    <header class="hidden h-16 shrink-0 items-center gap-2 md:flex">
       <div class="flex items-center gap-2 px-4">
         <button hlmSidebarTrigger></button>
         <hlm-separator orientation="vertical" class="mr-2 data-[orientation=vertical]:h-4" />

@@ -2,11 +2,10 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
-  lucideBookOpen,
-  lucideBot,
   lucideChevronRight,
   lucideSettings2,
   lucideSquareTerminal,
+  lucideTag,
 } from '@ng-icons/lucide';
 import { HlmCollapsibleImports } from '@spartan-ng/helm/collapsible';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
@@ -16,7 +15,7 @@ import type { NavMainItem } from './sidebar-data';
   selector: 'app-nav-main',
   imports: [HlmSidebarImports, NgIcon, HlmCollapsibleImports, RouterLink],
   providers: [
-    provideIcons({ lucideSquareTerminal, lucideBot, lucideBookOpen, lucideSettings2, lucideChevronRight }),
+    provideIcons({ lucideSquareTerminal, lucideTag, lucideSettings2, lucideChevronRight }),
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
