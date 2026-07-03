@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
   lucideChevronRight,
-  lucideSettings2,
-  lucideSquareTerminal,
-  lucideTag,
+  lucideLayoutDashboard,
+  lucidePackage,
+  lucideShoppingCart,
 } from '@ng-icons/lucide';
 import { HlmCollapsibleImports } from '@spartan-ng/helm/collapsible';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
@@ -13,9 +13,9 @@ import type { NavMainItem } from './sidebar-data';
 
 @Component({
   selector: 'app-nav-main',
-  imports: [HlmSidebarImports, NgIcon, HlmCollapsibleImports, RouterLink],
+  imports: [HlmSidebarImports, NgIcon, HlmCollapsibleImports, RouterLink, RouterLinkActive],
   providers: [
-    provideIcons({ lucideSquareTerminal, lucideTag, lucideSettings2, lucideChevronRight }),
+    provideIcons({ lucideLayoutDashboard, lucidePackage, lucideShoppingCart, lucideChevronRight }),
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -23,9 +23,14 @@ import type { NavMainItem } from './sidebar-data';
       <div hlmSidebarGroupLabel>Platform</div>
       <ul hlmSidebarMenu>
         @for (item of items(); track item.title) {
-          <hlm-collapsible [expanded]="item.isActive ?? false">
-            <li hlmSidebarMenuItem>
-              <a hlmSidebarMenuButton [routerLink]="item.url">
+          <li
+            hlmSidebarMenuItem
+            routerLinkActive
+            [routerLinkActiveOptions]="{ exact: item.url === '/' }"
+            #topLink="routerLinkActive"
+          >
+            <hlm-collapsible [expanded]="topLink.isActive">
+              <a hlmSidebarMenuButton [routerLink]="item.url" [isActive]="topLink.isActive">
                 <ng-icon [name]="item.icon" />
                 {{ item.title }}
               </a>
@@ -37,14 +42,23 @@ import type { NavMainItem } from './sidebar-data';
                   <ul hlmSidebarMenuSub>
                     @for (subItem of subItems; track subItem.title) {
                       <li hlmSidebarMenuSubItem>
-                        <a hlmSidebarMenuSubButton [routerLink]="subItem.url">{{ subItem.title }}</a>
+                        <a
+                          hlmSidebarMenuSubButton
+                          [routerLink]="subItem.url"
+                          routerLinkActive
+                          [routerLinkActiveOptions]="{ exact: true }"
+                          #subLink="routerLinkActive"
+                          [isActive]="subLink.isActive"
+                        >
+                          {{ subItem.title }}
+                        </a>
                       </li>
                     }
                   </ul>
                 </hlm-collapsible-content>
               }
-            </li>
-          </hlm-collapsible>
+            </hlm-collapsible>
+          </li>
         }
       </ul>
     </hlm-sidebar-group>

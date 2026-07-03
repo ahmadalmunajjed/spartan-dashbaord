@@ -7,7 +7,6 @@ export interface NavMainItem {
   title: string;
   url: string;
   icon: string;
-  isActive?: boolean;
   items?: NavSubItem[];
 }
 
@@ -40,36 +39,23 @@ export const sidebarData: {
   },
   navMain: [
     {
-      title: 'Playground',
-      url: '.',
-      icon: 'lucideSquareTerminal',
-      isActive: true,
-      items: [
-        { title: 'History', url: '.' },
-        { title: 'Starred', url: '.' },
-        { title: 'Settings', url: '.' },
-      ],
+      title: 'Dashboard',
+      url: '/',
+      icon: 'lucideLayoutDashboard',
     },
     {
       title: 'Products',
-      url: '.',
-      icon: 'lucideTag',
+      url: '/products',
+      icon: 'lucidePackage',
       items: [
-        { title: 'Genesis', url: '.' },
-        { title: 'Explorer', url: '.' },
-        { title: 'Quantum', url: '.' },
+        { title: 'All products', url: '/products' },
+        { title: 'Add product', url: '/products/new' },
       ],
     },
     {
-      title: 'Settings',
-      url: '.',
-      icon: 'lucideSettings2',
-      items: [
-        { title: 'General', url: '.' },
-        { title: 'Team', url: '.' },
-        { title: 'Billing', url: '.' },
-        { title: 'Limits', url: '.' },
-      ],
+      title: 'Orders',
+      url: '/orders',
+      icon: 'lucideShoppingCart',
     },
   ],
   navSecondary: [

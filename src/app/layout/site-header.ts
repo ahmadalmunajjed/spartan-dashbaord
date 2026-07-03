@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { HlmBreadcrumbImports } from '@spartan-ng/helm/breadcrumb';
 import { HlmSeparatorImports } from '@spartan-ng/helm/separator';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
+import { RouterStateService } from '../core/router-state.service';
 import { DirectionToggle } from './direction-toggle';
 import { ThemeToggle } from './theme-toggle';
 
@@ -16,13 +17,21 @@ import { ThemeToggle } from './theme-toggle';
         <hlm-separator orientation="vertical" class="me-2 data-[orientation=vertical]:h-4" />
         <nav hlmBreadcrumb>
           <ol hlmBreadcrumbList>
-            <li hlmBreadcrumbItem class="hidden sm:block">
-              <a hlmBreadcrumbLink link="/">Building Your Application</a>
-            </li>
-            <li hlmBreadcrumbSeparator class="hidden sm:block"></li>
-            <li hlmBreadcrumbItem>
-              <span hlmBreadcrumbPage>Data Fetching</span>
-            </li>
+            @for (crumb of routerState.breadcrumbs(); track crumb.label; let last = $last) {
+              @if (!last && crumb.link) {
+                <li hlmBreadcrumbItem class="hidden sm:block">
+                  <a hlmBreadcrumbLink [link]="crumb.link">{{ crumb.label }}</a>
+                </li>
+                <li hlmBreadcrumbSeparator class="hidden sm:block"></li>
+              } @else if (!last) {
+                <li hlmBreadcrumbItem class="hidden sm:block">{{ crumb.label }}</li>
+                <li hlmBreadcrumbSeparator class="hidden sm:block"></li>
+              } @else {
+                <li hlmBreadcrumbItem>
+                  <span hlmBreadcrumbPage>{{ crumb.label }}</span>
+                </li>
+              }
+            }
           </ol>
         </nav>
       </div>
@@ -34,4 +43,6 @@ import { ThemeToggle } from './theme-toggle';
     </header>
   `,
 })
-export class SiteHeader {}
+export class SiteHeader {
+  protected readonly routerState = inject(RouterStateService);
+}
