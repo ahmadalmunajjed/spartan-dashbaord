@@ -41,6 +41,19 @@
   --sidebar-accent-foreground: oklch(0.380 0.189 293.745);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.606 0.25 292.717);
+
+  /* Categorical chart palette — fixed order, validated with the dataviz skill's
+     validate_palette.js (CVD adjacent ΔE + WCAG contrast all PASS on this surface). */
+  --chart-1: #7f22fe;
+  --chart-2: #009689;
+  --chart-3: #16a34a;
+  --chart-4: #d97708;
+  --chart-5: #e11d48;
+
+  /* Status accents — reserved for state, never reused as chart series. */
+  --success: #15803d;
+  --warning: #a75f00;
+  --info: #0e6a9b;
 }
 
 :root.dark {
@@ -72,6 +85,28 @@
   --sidebar-accent-foreground: oklch(0.943 0.029 294.588);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.606 0.25 292.717);
+
+  /* Same order, re-stepped for the dark surface — not a flip of the light values. */
+  --chart-1: #9a75f9;
+  --chart-2: #13a194;
+  --chart-3: #36ac58;
+  --chart-4: #c68128;
+  --chart-5: #e75e70;
+
+  --success: #40d278;
+  --warning: #f9bb35;
+  --info: #50baeb;
+}
+
+@theme inline {
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
 }
 
 @layer base {
