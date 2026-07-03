@@ -117,3 +117,182 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* ============================================================ */
+/* Native-like route transitions (View Transitions API)          */
+/* ----------------------------------------------------------------
+   `data-transition` on <html> ('tab-fade' | 'push-forward' |
+   'push-back') is set by core/route-transition.ts via the router's
+   onViewTransitionCreated hook. `platform-ios`/`platform-android`/
+   `platform-web` on <html> is set once at boot by PlatformService.
+   Only `.route-transition-region` (the router-outlet's wrapper in
+   app.html) carries a view-transition-name, so header/sidebar/
+   tab-bar chrome never participates. Browsers/WebViews without
+   `document.startViewTransition` (e.g. WKWebView < iOS 18) never
+   invoke the hook at all — Angular's withViewTransitions() already
+   no-ops in that case.
+   ============================================================ */
+
+.route-transition-region {
+  view-transition-name: route-content;
+}
+
+/* Flips the horizontal keyframes below for RTL so "forward" still
+   reads as "deeper" — matches DirectionService, which sets `dir`
+   directly on document.documentElement (the same element this reads). */
+:root {
+  --transition-dir: 1;
+}
+:root[dir='rtl'] {
+  --transition-dir: -1;
+}
+
+::view-transition-group(route-content) {
+  animation-duration: 240ms;
+  animation-fill-mode: both;
+}
+
+/* ---------- tab-fade: same-depth switches (Dashboard/Products/Orders) */
+html[data-transition='tab-fade']::view-transition-group(route-content) {
+  animation-duration: 140ms;
+}
+html[data-transition='tab-fade']::view-transition-old(route-content) {
+  animation: route-fade-out 140ms ease-out both;
+}
+html[data-transition='tab-fade']::view-transition-new(route-content) {
+  animation: route-fade-in 140ms ease-in both;
+}
+
+@keyframes route-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes route-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- iOS push (UINavigationController-style), platform-ios only */
+html.platform-ios[data-transition^='push-']::view-transition-group(route-content) {
+  animation-duration: 380ms;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+html.platform-ios[data-transition^='push-']::view-transition-old(route-content),
+html.platform-ios[data-transition^='push-']::view-transition-new(route-content) {
+  animation-duration: 380ms;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+  animation-fill-mode: both;
+}
+html.platform-ios[data-transition='push-forward']::view-transition-old(route-content) {
+  animation-name: ios-push-out;
+}
+html.platform-ios[data-transition='push-forward']::view-transition-new(route-content) {
+  animation-name: ios-push-in;
+}
+html.platform-ios[data-transition='push-back']::view-transition-old(route-content) {
+  animation-name: ios-push-in-reverse;
+}
+html.platform-ios[data-transition='push-back']::view-transition-new(route-content) {
+  animation-name: ios-push-out-reverse;
+}
+
+@keyframes ios-push-out {
+  to {
+    transform: translateX(calc(var(--transition-dir) * -28%));
+    opacity: 0.75;
+  }
+}
+@keyframes ios-push-in {
+  from {
+    transform: translateX(calc(var(--transition-dir) * 100%));
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes ios-push-out-reverse {
+  from {
+    transform: translateX(calc(var(--transition-dir) * -28%));
+    opacity: 0.75;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes ios-push-in-reverse {
+  to {
+    transform: translateX(calc(var(--transition-dir) * 100%));
+    opacity: 1;
+  }
+}
+
+/* ---------- Android / web fallback: Material shared-axis-style slide+fade */
+html:not(.platform-ios)[data-transition^='push-']::view-transition-old(route-content),
+html:not(.platform-ios)[data-transition^='push-']::view-transition-new(route-content) {
+  animation-duration: 300ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: both;
+}
+html:not(.platform-ios)[data-transition='push-forward']::view-transition-old(route-content) {
+  animation-name: axis-out-forward;
+}
+html:not(.platform-ios)[data-transition='push-forward']::view-transition-new(route-content) {
+  animation-name: axis-in-forward;
+}
+html:not(.platform-ios)[data-transition='push-back']::view-transition-old(route-content) {
+  animation-name: axis-out-back;
+}
+html:not(.platform-ios)[data-transition='push-back']::view-transition-new(route-content) {
+  animation-name: axis-in-back;
+}
+
+@keyframes axis-out-forward {
+  to {
+    transform: translateX(calc(var(--transition-dir) * -4%));
+    opacity: 0;
+  }
+}
+@keyframes axis-in-forward {
+  from {
+    transform: translateX(calc(var(--transition-dir) * 4%));
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes axis-out-back {
+  to {
+    transform: translateX(calc(var(--transition-dir) * 4%));
+    opacity: 0;
+  }
+}
+@keyframes axis-in-back {
+  from {
+    transform: translateX(calc(var(--transition-dir) * -4%));
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ---------- Reduced motion: collapse to a fast plain cross-fade.
+   !important is deliberate: it must beat the higher-specificity
+   platform/kind selectors above regardless of source order. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(route-content) {
+    animation-duration: 120ms !important;
+  }
+  ::view-transition-old(route-content) {
+    animation: route-fade-out 120ms ease-out both !important;
+  }
+  ::view-transition-new(route-content) {
+    animation: route-fade-in 120ms ease-in both !important;
+  }
+}

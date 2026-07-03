@@ -3,6 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, map } from 'rxjs';
 import type { Breadcrumb } from './models';
+import { leafBreadcrumb } from './route-depth';
 
 @Injectable({ providedIn: 'root' })
 export class RouterStateService {
@@ -20,13 +21,9 @@ export class RouterStateService {
   public readonly breadcrumbs = computed(() => this.navigation().breadcrumbs);
 
   private readRouteState(): { url: string; breadcrumbs: Breadcrumb[] } {
-    let route = this.router.routerState.snapshot.root;
-    while (route.firstChild) {
-      route = route.firstChild;
-    }
     return {
       url: this.router.url,
-      breadcrumbs: (route.data['breadcrumb'] as Breadcrumb[] | undefined) ?? [],
+      breadcrumbs: leafBreadcrumb(this.router.routerState.snapshot.root),
     };
   }
 }
