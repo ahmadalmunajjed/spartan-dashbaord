@@ -1,3 +1,79 @@
-<h1 class="text-3xl font-bold underline">
-  Hello world!
-</h1>
+<main class="mx-auto flex max-w-5xl flex-col gap-8 px-6 py-12">
+  <header class="flex flex-col gap-2">
+    <h1 class="text-3xl font-bold tracking-tight">{{ title() }}</h1>
+    <p class="text-muted-foreground">A quick tour of spartan/ui components, wired up and working.</p>
+  </header>
+
+  <section class="grid gap-8 md:grid-cols-2">
+    <hlm-card>
+      <hlm-card-header>
+        <h2 hlmCardTitle>Create your account</h2>
+        <p hlmCardDescription>Start your free trial. No credit card required.</p>
+        <div hlmCardAction>
+          <span hlmBadge variant="secondary">New</span>
+        </div>
+      </hlm-card-header>
+
+      <div hlmCardContent>
+        <form class="flex flex-col gap-4">
+          <div class="grid gap-2">
+            <label hlmLabel for="name">Full name</label>
+            <input hlmInput id="name" type="text" placeholder="Ada Lovelace" autocomplete="name" />
+          </div>
+
+          <div class="grid gap-2">
+            <label hlmLabel for="email">Email</label>
+            <input hlmInput id="email" type="email" placeholder="ada@example.com" autocomplete="email" />
+          </div>
+
+          <div class="flex items-center justify-between gap-4 pt-2">
+            <label hlmLabel for="subscribe">Email me product updates</label>
+            <hlm-switch inputId="subscribe" [checked]="subscribe()" (checkedChange)="subscribe.set($event)" />
+          </div>
+          <p class="text-muted-foreground text-sm">{{ subscribeHint() }}</p>
+        </form>
+      </div>
+
+      <hlm-card-footer class="flex-col gap-2">
+        <button hlmBtn type="submit" class="w-full">Create account</button>
+        <button hlmBtn variant="outline" class="w-full">Cancel</button>
+      </hlm-card-footer>
+    </hlm-card>
+
+    <div class="flex flex-col gap-8">
+      <section class="flex flex-col gap-3">
+        <h2 class="text-muted-foreground text-sm font-medium">Buttons</h2>
+        <div class="flex flex-wrap items-center gap-2">
+          @for (variant of buttonVariants; track variant) {
+            <button hlmBtn [variant]="variant">{{ variant }}</button>
+          }
+        </div>
+      </section>
+
+      <hlm-separator />
+
+      <section class="flex flex-col gap-3">
+        <h2 class="text-muted-foreground text-sm font-medium">Badges</h2>
+        <div class="flex flex-wrap items-center gap-2">
+          @for (variant of badgeVariants; track variant) {
+            <span hlmBadge [variant]="variant">{{ variant }}</span>
+          }
+        </div>
+      </section>
+
+      <hlm-separator />
+
+      <section class="flex flex-col gap-3">
+        <h2 class="text-muted-foreground text-sm font-medium">Team</h2>
+        <hlm-avatar-group>
+          @for (member of team; track member.initials) {
+            <hlm-avatar>
+              <span hlmAvatarFallback>{{ member.initials }}</span>
+            </hlm-avatar>
+          }
+          <hlm-avatar-group-count>+3</hlm-avatar-group-count>
+        </hlm-avatar-group>
+      </section>
+    </div>
+  </section>
+</main>
