@@ -32,7 +32,7 @@ import { ProductsService } from '../../core/products.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="mx-auto flex max-w-3xl flex-col gap-4">
+    <div class="mx-auto flex max-w-3xl flex-col gap-4 pb-20 md:pb-0">
       <div>
         <h1 class="text-2xl font-semibold">Add product</h1>
         <p class="text-muted-foreground text-sm">Create a new product for your store.</p>
@@ -116,7 +116,9 @@ import { ProductsService } from '../../core/products.service';
             }
           </div>
 
-          <div class="flex items-center justify-end gap-2">
+          <div
+            class="bg-background fixed inset-x-0 bottom-16 z-10 flex items-center justify-end gap-2 border-t p-4 md:static md:inset-auto md:z-auto md:border-t-0 md:bg-transparent md:p-0"
+          >
             @if (form.dirty) {
               <hlm-alert-dialog>
                 <button hlmAlertDialogTrigger hlmBtn type="button" variant="outline">Cancel</button>

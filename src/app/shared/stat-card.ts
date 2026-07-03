@@ -23,7 +23,7 @@ import { HlmCardImports } from '@spartan-ng/helm/card';
       <div class="mt-2 text-2xl font-semibold">{{ value() }}</div>
       @if (delta(); as d) {
         <div
-          class="mt-1 flex items-center gap-1 text-xs font-medium"
+          class="mt-1 flex flex-wrap items-center gap-1 text-xs font-medium"
           [class.text-success]="deltaPositive()"
           [class.text-destructive]="!deltaPositive()"
         >

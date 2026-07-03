@@ -75,7 +75,7 @@ const PAD = { top: 16, right: 12, bottom: 24, left: 12 };
           [attr.x]="pad.left"
           [attr.y]="height - 6"
           class="fill-muted-foreground"
-          font-size="10"
+          font-size="14"
         >
           {{ firstLabel() }}
         </text>
@@ -84,7 +84,7 @@ const PAD = { top: 16, right: 12, bottom: 24, left: 12 };
           [attr.y]="height - 6"
           text-anchor="end"
           class="fill-muted-foreground"
-          font-size="10"
+          font-size="14"
         >
           {{ lastLabel() }}
         </text>

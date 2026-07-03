@@ -6,6 +6,7 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCheckboxImports } from '@spartan-ng/helm/checkbox';
 import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
 import { HlmSheetImports } from '@spartan-ng/helm/sheet';
+import { HlmSidebarService } from '@spartan-ng/helm/sidebar';
 import { HlmTableImports } from '@spartan-ng/helm/table';
 import { HlmToggleGroupImports } from '@spartan-ng/helm/toggle-group';
 import type { FulfillmentStatus, Order } from '../../core/models';
@@ -39,14 +40,44 @@ type SortKey = 'number' | 'date' | 'customer' | 'total';
         <p class="text-muted-foreground text-sm">{{ filtered().length }} orders</p>
       </div>
 
-      <hlm-toggle-group type="single" [(value)]="fulfillmentFilter" class="w-fit">
-        <button hlmToggleGroupItem value="all">All</button>
-        <button hlmToggleGroupItem value="unfulfilled">Unfulfilled</button>
-        <button hlmToggleGroupItem value="shipped">Shipped</button>
-        <button hlmToggleGroupItem value="fulfilled">Fulfilled</button>
-      </hlm-toggle-group>
+      <div class="-mx-4 overflow-x-auto px-4 md:mx-0 md:overflow-visible md:px-0">
+        <hlm-toggle-group type="single" [(value)]="fulfillmentFilter" class="w-fit">
+          <button hlmToggleGroupItem value="all">All</button>
+          <button hlmToggleGroupItem value="unfulfilled">Unfulfilled</button>
+          <button hlmToggleGroupItem value="shipped">Shipped</button>
+          <button hlmToggleGroupItem value="fulfilled">Fulfilled</button>
+        </hlm-toggle-group>
+      </div>
 
-      <div hlmTableContainer class="rounded-xl border">
+      <ul class="divide-y rounded-xl border md:hidden">
+        @for (order of paged(); track order.id) {
+          <li class="flex flex-col gap-2 p-4">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <hlm-checkbox
+                  [checked]="selected().has(order.id)"
+                  (checkedChange)="toggleOne(order.id, $event)"
+                  [aria-label]="'Select order ' + order.number"
+                />
+                <button type="button" class="font-medium hover:underline" (click)="selectedOrder.set(order)">
+                  {{ order.number }}
+                </button>
+              </div>
+              <span class="text-muted-foreground text-sm">{{ order.date }}</span>
+            </div>
+            <div class="text-muted-foreground text-sm">{{ order.customer.name }}</div>
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <app-status-badge [status]="order.payment" />
+                <app-status-badge [status]="order.fulfillment" />
+              </div>
+              <span class="font-medium">{{ currency(order.total) }}</span>
+            </div>
+          </li>
+        }
+      </ul>
+
+      <div hlmTableContainer class="hidden rounded-xl border md:block">
         <table hlmTable>
           <thead hlmTHead>
             <tr hlmTr>
@@ -112,7 +143,14 @@ type SortKey = 'number' | 'date' | 'customer' | 'total';
         </table>
       </div>
 
-      <hlm-numbered-pagination [(currentPage)]="page" [(itemsPerPage)]="pageSize" [totalItems]="filtered().length" />
+      <div class="overflow-x-auto">
+        <hlm-numbered-pagination
+          [(currentPage)]="page"
+          [(itemsPerPage)]="pageSize"
+          [totalItems]="filtered().length"
+          [maxSize]="5"
+        />
+      </div>
     </div>
 
     @if (selected().size > 0) {
@@ -124,7 +162,7 @@ type SortKey = 'number' | 'date' | 'customer' | 'total';
       </div>
     }
 
-    <hlm-sheet side="right" [state]="sheetState()" (stateChanged)="onSheetStateChanged($event)">
+    <hlm-sheet [side]="sheetSide()" [state]="sheetState()" (stateChanged)="onSheetStateChanged($event)">
       <hlm-sheet-content *hlmSheetPortal="let ctx">
         <hlm-sheet-header>
           <h3 hlmSheetTitle>{{ selectedOrder()?.number }}</h3>
@@ -136,6 +174,7 @@ type SortKey = 'number' | 'date' | 'customer' | 'total';
 })
 export class OrdersPage {
   private readonly ordersService = inject(OrdersService);
+  private readonly sidebarService = inject(HlmSidebarService);
 
   protected readonly fulfillmentFilter = signal<'all' | FulfillmentStatus>('all');
   protected readonly sortKey = signal<SortKey>('date');
@@ -176,6 +215,10 @@ export class OrdersPage {
 
   protected readonly sheetState = computed<'open' | 'closed'>(() =>
     this.selectedOrder() ? 'open' : 'closed',
+  );
+
+  protected readonly sheetSide = computed<'bottom' | 'right'>(() =>
+    this.sidebarService.isMobile() ? 'bottom' : 'right',
   );
 
   protected readonly allSelected = computed(() => {

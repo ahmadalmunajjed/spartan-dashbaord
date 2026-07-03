@@ -96,7 +96,7 @@ const CURRENCY = new Intl.NumberFormat('en-US', { style: 'currency', currency: '
         </div>
       } @else {
         <div class="rounded-xl border">
-          <div class="flex items-center gap-3 border-b px-4 py-2">
+          <div class="flex flex-col gap-2 border-b px-4 py-2 md:flex-row md:items-center md:gap-3">
             <hlm-checkbox
               [checked]="allSelected()"
               [indeterminate]="partiallySelected()"
@@ -107,32 +107,36 @@ const CURRENCY = new Intl.NumberFormat('en-US', { style: 'currency', currency: '
           </div>
           <ul class="divide-y">
             @for (product of filtered(); track product.id) {
-              <li class="flex items-center gap-3 px-4 py-3">
-                <hlm-checkbox
-                  [checked]="selected().has(product.id)"
-                  (checkedChange)="toggleOne(product.id, $event)"
-                  [aria-label]="'Select ' + product.name"
-                />
-                <span
-                  class="size-10 shrink-0 rounded-lg"
-                  [style.background]="
-                    'linear-gradient(135deg, oklch(0.7 0.15 ' + product.hue + '), oklch(0.55 0.2 ' + product.hue + '))'
-                  "
-                ></span>
-                <div class="min-w-0 flex-1">
-                  <div class="truncate font-medium">{{ product.name }}</div>
-                  <div class="text-muted-foreground text-sm">{{ product.sku }}</div>
+              <li class="flex flex-col gap-2 px-4 py-3 md:flex-row md:items-center md:gap-3">
+                <div class="flex items-center gap-3">
+                  <hlm-checkbox
+                    [checked]="selected().has(product.id)"
+                    (checkedChange)="toggleOne(product.id, $event)"
+                    [aria-label]="'Select ' + product.name"
+                  />
+                  <span
+                    class="size-10 shrink-0 rounded-lg"
+                    [style.background]="
+                      'linear-gradient(135deg, oklch(0.7 0.15 ' + product.hue + '), oklch(0.55 0.2 ' + product.hue + '))'
+                    "
+                  ></span>
+                  <div class="min-w-0 flex-1">
+                    <div class="truncate font-medium">{{ product.name }}</div>
+                    <div class="text-muted-foreground text-sm">{{ product.sku }}</div>
+                  </div>
                 </div>
-                <span class="text-muted-foreground hidden w-24 truncate text-sm sm:block">{{ product.category }}</span>
-                <span class="w-16 text-end text-sm">{{ currency(product.price) }}</span>
-                <span
-                  class="hidden w-20 text-end text-sm sm:block"
-                  [class.text-warning]="product.stock > 0 && product.stock <= 10"
-                  [class.text-destructive]="product.stock === 0"
-                >
-                  {{ product.stock }} in stock
-                </span>
-                <app-status-badge [status]="product.status" class="w-20 shrink-0" />
+                <div class="flex items-center justify-between gap-3 md:contents">
+                  <span class="text-muted-foreground truncate text-sm md:w-24">{{ product.category }}</span>
+                  <span class="text-end text-sm md:w-16">{{ currency(product.price) }}</span>
+                  <span
+                    class="text-end text-sm md:w-20"
+                    [class.text-warning]="product.stock > 0 && product.stock <= 10"
+                    [class.text-destructive]="product.stock === 0"
+                  >
+                    {{ product.stock }} in stock
+                  </span>
+                  <app-status-badge [status]="product.status" class="shrink-0 md:w-20" />
+                </div>
               </li>
             }
           </ul>
